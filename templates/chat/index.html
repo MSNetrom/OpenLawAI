@@ -1,0 +1,34 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="no">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>OpenLawAI - AI Legal Assistant</title>
+    <link rel="icon" href="{% static 'chat/favicon.ico' %}" sizes="48x48">
+    <link rel="icon" type="image/png" sizes="32x32" href="{% static 'chat/favicon-32x32.png' %}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{% static 'chat/favicon-16x16.png' %}">
+    <link rel="apple-touch-icon" sizes="180x180" href="{% static 'chat/apple-touch-icon.png' %}">
+    <meta name="description" content="OpenLawAI helps you find relevant laws and regulations, analyze legal documents, and generate drafts of contracts and other legal documents." />
+    <meta property="og:title" content="OpenLawAI - AI Legal Assistant" />
+    <meta property="og:description" content="Find laws, analyze documents, and get legal guidance with AI." />
+    <meta property="og:type" content="website" />
+    <link rel="stylesheet" href="{% static 'chat/index.css' %}" />
+    <script>
+      window.CSRF_TOKEN = '{{ csrf_token }}';
+      window.APP_MODE = '{{ app_mode|default:"chat" }}';
+    </script>
+  </head>
+  <body class="chat-body">
+    <div id="root">
+      <div style="max-width:600px;margin:4rem auto;padding:0 1.5rem;font-family:system-ui,sans-serif;text-align:center">
+        <h1 style="font-size:2rem;margin:0 0 1rem">OpenLawAI</h1>
+        <p style="color:#475467;line-height:1.6">
+          OpenLawAI is an AI-powered legal assistant that helps you
+          find relevant laws, analyze documents, and draft legal texts.
+        </p>
+      </div>
+    </div>
+    <script type="module" src="{% static 'chat/index.js' %}"></script>
+  </body>
+</html>

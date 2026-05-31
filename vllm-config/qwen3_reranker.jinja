@@ -1,0 +1,15 @@
+{%- macro format_document(doc_idx) -%}
+<Document>: {{ documents[doc_idx] }}<|im_end|>
+<|im_start|>assistant
+<think>
+
+</think>
+
+{%- endmacro -%}
+<|im_start|>system
+Judge whether the Document meets the requirements based on the Query and the Instruct provided. Note that the answer can only be "yes" or "no".<|im_end|>
+<|im_start|>user
+<Instruct>: Given a legal query, retrieve relevant legal documents and passages that answer the query
+<Query>: {{ query }}
+{{ format_document(0) }}
+

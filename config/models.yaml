@@ -1,0 +1,28 @@
+modes:
+  decide:
+    fast: gpt-5-nano
+    thorough: gpt-5-nano
+  clarify:
+    fast: gpt-5-nano
+    thorough: gpt-5-mini
+  retrieve:
+    fast: gpt-5-nano
+    thorough: gpt-5-mini
+  retrieve_refine:
+    fast: gpt-5-nano
+    thorough: gpt-5-mini
+  user_doc:
+    fast: gpt-5-nano
+    thorough: gpt-5-nano
+  user_doc_summary:
+    fast: gpt-5-nano
+    thorough: gpt-5-nano
+  answer:
+    fast: gpt-5-nano
+    thorough: gpt-5
+  generate:
+    fast: gpt-5-mini
+    thorough: gpt-5-mini
+
+# Used for conversation summary (title generation, context compression)
+summary_model: gpt-5-nano

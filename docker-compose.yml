@@ -1,0 +1,122 @@
+# OpenLawAI — infrastructure services
+#
+# Usage:
+#   cp .env.example .env   # edit as needed
+#   docker compose up -d
+#
+# Then run the Django app on the host:
+#   python manage.py migrate
+#   uvicorn config.asgi:application --host 0.0.0.0 --port 8000
+#
+# Requires an NVIDIA GPU with Docker GPU support for embedding and reranking.
+
+services:
+  weaviate:
+    image: semitechnologies/weaviate:1.34.1
+    restart: unless-stopped
+    environment:
+      QUERY_DEFAULTS_LIMIT: 20
+      AUTHENTICATION_ANONYMOUS_ACCESS_ENABLED: "true"
+      PERSISTENCE_DATA_PATH: /var/lib/weaviate
+      DEFAULT_VECTORIZER_MODULE: none
+      ENABLE_MODULES: ""
+      CLUSTER_HOSTNAME: weaviate
+    ports:
+      - "${WEAVIATE_PORT:-8080}:8080"
+      - "${WEAVIATE_GRPC_PORT:-50051}:50051"
+    volumes:
+      - weaviate_data:/var/lib/weaviate
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:8080/v1/.well-known/ready"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:8-alpine
+    restart: unless-stopped
+    ports:
+      - "${REDIS_PORT:-6379}:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  embed:
+    image: vllm/vllm-openai:latest
+    restart: unless-stopped
+    ports:
+      - "${EMBED_PORT:-8001}:8000"
+    environment:
+      - VLLM_API_KEY=${VLLM_API_KEY:-}
+    command: ["--config", "/config/embedding.yaml"]
+    volumes:
+      - vllm_cache:/root/.cache
+      - ./vllm-config:/config:ro
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 180s
+
+  rerank:
+    image: vllm/vllm-openai:latest
+    restart: unless-stopped
+    depends_on:
+      embed:
+        condition: service_healthy
+    ports:
+      - "${RERANK_PORT:-8002}:8000"
+    environment:
+      - VLLM_API_KEY=${VLLM_API_KEY:-}
+    command: ["--config", "/config/reranker.yaml"]
+    volumes:
+      - vllm_cache:/root/.cache
+      - ./vllm-config:/config:ro
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 180s
+
+  marker:
+    build:
+      context: .
+      dockerfile: Dockerfile.marker
+    restart: unless-stopped
+    cpus: "6"
+    ports:
+      - "${MARKER_PORT:-8003}:8003"
+    volumes:
+      - marker_cache:/root/.cache
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8003/"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+
+volumes:
+  weaviate_data:
+  redis_data:
+  vllm_cache:
+  marker_cache:

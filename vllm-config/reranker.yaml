@@ -1,0 +1,8 @@
+model: tomaarsen/Qwen3-Reranker-4B-seq-cls
+served-model-name: Qwen/Qwen3-Reranker-4B
+runner: pooling
+dtype: auto
+max-model-len: 2048
+gpu-memory-utilization: 0.4
+chat-template: /config/qwen3_reranker.jinja
+

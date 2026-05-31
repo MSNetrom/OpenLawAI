@@ -1,0 +1,47 @@
+# Python
+.venv/
+venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Node
+node_modules/
+npm-debug.log
+
+# Git
+.git/
+.gitignore
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Data & Docs
+gjeldende-lover/
+gjeldende-sentrale-forskrifter/
+gjeldende-lover.tar.bz2
+gjeldende-sentrale-forskrifter.tar.bz2
+
+
+# Env files
+.env*
+!.env.prod
+!.env.dev
+
+# Docker
+docker-compose*.yml
+Dockerfile*

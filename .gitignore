@@ -1,0 +1,35 @@
+# Data files
+gjeldende-lover/
+gjeldende-sentrale-forskrifter/
+data/
+*.tar.bz2
+
+# Python
+*.pyc
+*.egg-info
+.pytest_cache
+.venv
+__pycache__
+
+# Environment files (keep .env.example tracked)
+.env
+.env.*
+!.env.example
+
+# Django
+staticfiles/
+db.sqlite3
+
+# Frontend build artifacts
+chatdb/static/chat/index.js
+chatdb/static/chat/index.css
+frontend/node_modules/
+frontend/dist/
+
+# IDE
+.cursor/
+.vscode/
+
+# Misc
+other/
+llm_ui_pseudo/
