@@ -32,8 +32,8 @@ Markdown-feltet skal inneholde KUN selve dokumentet.
 GENERATE_STATIC_INSTRUCTIONS = SYSTEM_IDENTITY + "\n\n" + GENERATE_INSTRUCTIONS
 
 # Status / error messages
-STATUS_GENERATING = "Genererer dokument..."
-ERROR_GENERATE_FAILED = "Kunne ikke generere dokumentet. Prøv igjen."
+STATUS_GENERATING = "Generating document..."
+ERROR_GENERATE_FAILED = "Could not generate the document. Please try again."
 
 
 def build_document_context_message(documents: List[Dict], user_doc_results: List[Dict] | None = None) -> dict:

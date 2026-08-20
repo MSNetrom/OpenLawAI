@@ -40,14 +40,18 @@ class UsageHistoryAPIView(APIView):
             if len(summaries) >= limit:
                 has_more = True
                 break
-            calls = [
-                {
-                    "model": call.model,
-                    "input_tokens": call.input_tokens,
-                    "output_tokens": call.output_tokens,
-                }
-                async for call in summary.calls.all()
-            ]
+            # Aggregate calls by model
+            calls_by_model: dict[str, dict] = {}
+            async for call in summary.calls.all():
+                if call.model not in calls_by_model:
+                    calls_by_model[call.model] = {
+                        "model": call.model,
+                        "input_tokens": 0,
+                        "output_tokens": 0,
+                    }
+                calls_by_model[call.model]["input_tokens"] += call.input_tokens
+                calls_by_model[call.model]["output_tokens"] += call.output_tokens
+            calls = list(calls_by_model.values())
             services = []
             if summary.search_performed:
                 services.append("search")

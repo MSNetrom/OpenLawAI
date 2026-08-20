@@ -31,19 +31,19 @@ SET_MODE_DESCRIPTION_PREFIX = "Velg neste modus i assistentens handlingspipeline
 def doc_titles_for_context(documents: List[Dict[str, Any]]) -> str:
     """Compact document titles for context."""
     if not documents:
-        return "Ingen juridiske kilder hentet."
+        return "No legal sources retrieved."
     lines = [f"- {d['title']} ({d['work_ref_id']}, {d['document_type']})" for d in documents]
-    return f"Juridiske kilder ({len(documents)}):\n" + "\n".join(lines)
+    return f"Legal sources ({len(documents)}):\n" + "\n".join(lines)
 
 
 # Status messages emitted during processing
-STATUS_ANALYZING = "Analyserer henvendelse..."
-STATUS_SEARCHING = "Søker i juridiske kilder..."
-STATUS_ANSWERING = "Formulerer svar..."
-STATUS_CLARIFYING = "Formulerer oppfølgingsspørsmål..."
-STATUS_GENERATING = "Genererer dokument..."
-STATUS_PROCESSING_DOCS = "Behandler opplastede dokumenter..."
-STATUS_SEARCHING_USER_DOCS = "Søker i opplastede dokumenter..."
+STATUS_ANALYZING = "Analyzing request..."
+STATUS_SEARCHING = "Searching in legal sources..."
+STATUS_ANSWERING = "Formulating response..."
+STATUS_CLARIFYING = "Formulating follow-up questions..."
+STATUS_GENERATING = "Generating document..."
+STATUS_PROCESSING_DOCS = "Processing uploaded documents..."
+STATUS_SEARCHING_USER_DOCS = "Searching in uploaded documents..."
 
 # Infrastructure prompts used by chat_manager
 JSON_REPAIR_SUFFIX = "\n\nKRITISK: Returner kun gyldig JSON som matcher skjemaet nøyaktig."

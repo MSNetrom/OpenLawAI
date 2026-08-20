@@ -98,7 +98,7 @@ const fetchJSON = async (url, options = {}) => {
       try {
         data = await response.json();
       } catch {
-        throw new Error("Ugyldig svar fra serveren.");
+        throw new Error("Invalid response from server.");
       }
     } else {
       data = await response.json().catch(() => ({}));
@@ -179,7 +179,7 @@ const fetchSSE = async (url, options, callbacks) => {
   const abortContext = createAbortContext(
     options.signal,
     options.connectTimeoutMs ?? SSE_CONNECT_TIMEOUT_MS,
-    "Tilkoblingen til serveren tok for lang tid.",
+    "Connection to server timed out.",
   );
   let reader;
   try {
@@ -258,7 +258,7 @@ const fetchSSE = async (url, options, callbacks) => {
           reader.read(),
           new Promise((_, reject) => {
             idleTimeoutId = window.setTimeout(() => {
-              const timeoutError = new Error("Tilkoblingen til serveren ble inaktiv.");
+              const timeoutError = new Error("Connection to server became inactive.");
               timeoutError.name = "TimeoutError";
               abortContext.controller.abort(timeoutError);
               reject(timeoutError);
@@ -1054,7 +1054,7 @@ const App = () => {
               ? {
                   ...conv,
                   isSending: true,
-                  streamingStatus: "Kobler til igjen...",
+                  streamingStatus: "Reconnecting...",
                   hasAttemptedReconnect: true,
                 }
               : conv
@@ -1268,7 +1268,7 @@ const App = () => {
   const content = useMemo(() => {
     switch (view) {
       case "loading":
-        return <div className="shell">Laster inn...</div>;
+        return <div className="shell">Loading...</div>;
       case "login":
         return <LoginPanel onSuccess={handleAuthSuccess} onSwitch={() => setView("register")} />;
       case "register":
@@ -1466,7 +1466,7 @@ const ChatSidebar = ({
               </div>
             </div>
           ))}
-          {isLoadingMore && <div className="sidebar-loading">Laster flere...</div>}
+          {isLoadingMore && <div className="sidebar-loading">Loading more...</div>}
         </div>
       </aside>
     </>
@@ -1504,7 +1504,7 @@ const OverviewPanel = ({ onBack }) => {
 
   const formatDateTime = (isoString) => {
     const date = new Date(isoString);
-    return date.toLocaleString("nb-NO", {
+    return date.toLocaleString("en-US", {
       day: "2-digit",
       month: "2-digit",
       year: "numeric",
@@ -1676,7 +1676,7 @@ const ChatHeader = ({ user, onLogout, onOverview, onToggleSidebar, sidebarOpen }
         <button
           className="burger-btn"
           onClick={() => setMenuOpen(!menuOpen)}
-          aria-label="Meny"
+          aria-label="Menu"
           aria-expanded={menuOpen}
           aria-haspopup="menu"
           aria-controls="header-menu"
@@ -1793,7 +1793,7 @@ const MessageBubble = ({ message }) => {
           {message.content}
         </ReactMarkdown>
       </div>
-      {isUser && <div className="message-avatar user">DU</div>}
+      {isUser && <div className="message-avatar user">YOU</div>}
     </div>
   );
 };
@@ -1809,7 +1809,7 @@ const TypingIndicator = ({ statusText, streamingText }) => {
       return;
     }
 
-    // Alternate between status text and "Venter..." every 3 seconds
+    // Alternate between status text and "Waiting..." every 3 seconds
     let fadeTimeoutId;
     const intervalId = setInterval(() => {
       setFadeClass("fade-out");
@@ -1827,7 +1827,7 @@ const TypingIndicator = ({ statusText, streamingText }) => {
     };
   }, [statusText, streamingText]);
 
-  const displayText = showAlternate ? "Venter..." : statusText;
+  const displayText = showAlternate ? "Waiting..." : statusText;
 
   return (
     <div className="typing-indicator-container" aria-live="polite">
@@ -1902,12 +1902,12 @@ const validatePendingFile = (file) => {
   const isAllowedType = ALLOWED_UPLOAD_TYPES.has(file.type);
   const isAllowedExtension = ALLOWED_UPLOAD_EXTENSIONS.has(extension);
   if (!isAllowedType && !isAllowedExtension) {
-    return "Ugyldig filtype.";
+    return "Invalid file type.";
   }
   const isImage = file.type.startsWith("image/") || [".png", ".jpg", ".jpeg", ".webp", ".tif", ".tiff"].includes(extension);
   const maxBytes = isImage ? MAX_IMAGE_FILE_SIZE_BYTES : MAX_FILE_SIZE_BYTES;
   if (file.size > maxBytes) {
-    return `Filen er for stor. Maks ${Math.floor(maxBytes / (1024 * 1024))} MB.`;
+    return `File is too large. Max ${Math.floor(maxBytes / (1024 * 1024))} MB.`;
   }
   return null;
 };
@@ -1966,7 +1966,7 @@ const ChatComposer = ({
 
     const filesToAdd = validFiles.slice(0, availableSlots);
     if (filesToAdd.length < validFiles.length) {
-      onError?.(`Bare ${availableSlots} fil(er) lagt til. Maks ${MAX_PENDING_FILES} filer om gangen.`);
+      onError?.(`Only ${availableSlots} file(s) added. Max ${MAX_PENDING_FILES} files at a time.`);
     }
 
     for (const file of filesToAdd) {
@@ -2102,7 +2102,7 @@ const ChatComposer = ({
               aria-label="Select thorough mode"
               aria-pressed={qualityMode === "thorough"}
             >
-              Grundig
+              Thorough
             </button>
             <button
               className={`quality-btn ${qualityMode === "fast" ? "active" : ""}`}
@@ -2111,7 +2111,7 @@ const ChatComposer = ({
               aria-label="Select fast mode"
               aria-pressed={qualityMode === "fast"}
             >
-              Rask
+              Fast
             </button>
           </div>
           <button
@@ -2135,7 +2135,7 @@ const ChatComposer = ({
 const EmptyState = () => (
   <div className="empty-state">
     <div className="empty-card">
-      <h3>Hei! Hva kan jeg hjelpe deg med i dag?</h3>
+      <h3>Hi! How can I help you today?</h3>
     </div>
   </div>
 );

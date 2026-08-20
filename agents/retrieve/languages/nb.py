@@ -9,13 +9,13 @@ from agents.models import (
 )
 
 # Status messages
-STATUS_SEARCHING = "Søker etter dokumenter..."
-ERROR_RETRIEVAL_FAILED = "Kunne ikke hente juridiske kilder nå. Fortsetter uten kilder."
-QUERIES_SUMMARY_PREVIOUS_ROUND = "(Kilder hentet i tidligere retrieval-runde i samme samtale.)"
+STATUS_SEARCHING = "Searching for documents..."
+ERROR_RETRIEVAL_FAILED = "Could not retrieve legal sources right now. Continuing without sources."
+QUERIES_SUMMARY_PREVIOUS_ROUND = "(Sources retrieved in previous retrieval round in the same conversation.)"
 
 
 def occupancy_status(pool_count: int, max_docs: int) -> str:
-    return f"Dokumenter i pool: {pool_count} (mål: maks {max_docs})"
+    return f"Documents in pool: {pool_count} (target: max {max_docs})"
 
 
 def user_doc_context(chat_history: ChatHistory) -> list[dict]:

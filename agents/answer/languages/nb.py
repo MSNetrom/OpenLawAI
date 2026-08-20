@@ -52,7 +52,7 @@ GENERERT DOKUMENT TILGJENGELIG:
 - Inkluder nedlastingslenken som markdown-lenke: [filnavn](url) - kopier lenken nøyaktig fra listen over.
 - IKKE skriv URL-en som ren tekst, bruk ALLTID markdown-lenkeformat."""
 
-STATUS_FORMULATING = "Formulerer svar..."
+STATUS_FORMULATING = "Formulating response..."
 
 
 def build_static_instructions(

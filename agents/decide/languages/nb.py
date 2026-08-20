@@ -8,7 +8,7 @@ from agents.models import ModeName, UserDocsState
 
 DECIDE_IDENTITY = "Du er en koordinator for en juridisk assistent. Velg neste steg."
 
-STATUS_ANALYSING = "Analyserer henvendelse..."
+STATUS_ANALYSING = "Analyzing request..."
 
 
 def build_guidance(allowed_modes: List[ModeName]) -> str:
@@ -55,12 +55,12 @@ def build_status_text(
 
     if documents:
         titles = "\n".join(f"- {doc['title']}" for doc in documents)
-        header = f"Juridiske kilder ({len(documents)} dokumenter hentet)"
+        header = f"Legal sources ({len(documents)} documents retrieved)"
         if retrieval_coverage:
-            header += f"\nDekning: {retrieval_coverage}"
+            header += f"\nCoverage: {retrieval_coverage}"
         parts.append(f"{header}\n{titles}")
     else:
-        parts.append("Du har ikke hentet noen juridiske kilder, og du må derfor hente kilder for å kunne gi kildehenvisninger.")
+        parts.append("You have not retrieved any legal sources, and you must therefore retrieve sources to be able to provide citations.")
 
     if user_docs.documents:
         doc_lines = []
@@ -68,16 +68,16 @@ def build_status_text(
             if doc.status == "ready" and doc.summary:
                 doc_lines.append(f"- {doc.filename}: {doc.summary}")
             elif doc.status == "ready" and doc.retrieved:
-                doc_lines.append(f"- {doc.filename}: (hentet, ingen oppsummering)")
+                doc_lines.append(f"- {doc.filename}: (retrieved, no summary)")
             elif doc.status == "ready":
-                doc_lines.append(f"- {doc.filename}: (klar, ikke analysert)")
+                doc_lines.append(f"- {doc.filename}: (ready, not analyzed)")
             elif doc.status == "pending":
-                doc_lines.append(f"- {doc.filename}: (behandles)")
+                doc_lines.append(f"- {doc.filename}: (processing)")
             elif doc.status == "failed":
-                doc_lines.append(f"- {doc.filename}: (feilet)")
-        parts.append(f"Brukerens dokumenter:\n" + "\n".join(doc_lines))
+                doc_lines.append(f"- {doc.filename}: (failed)")
+        parts.append(f"User documents:\n" + "\n".join(doc_lines))
     else:
-        parts.append("Til info: Brukeren har ikke lastet opp noen dokumenter.")
+        parts.append("For info: The user has not uploaded any documents.")
 
     parts.append(f"Retrieval: {retrieval_calls}/{max_retrieval_passes}")
 

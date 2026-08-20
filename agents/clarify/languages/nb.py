@@ -6,7 +6,7 @@ from typing import Dict, List
 from agents.shared import SYSTEM_IDENTITY, _doc_titles_for_context
 
 # Status messages
-STATUS_PREPARING = "Forbereder oppfølgingsspørsmål..."
+STATUS_PREPARING = "Preparing follow-up questions..."
 
 CLARIFY_INSTRUCTIONS = """Still oppfølgingsspørsmål for å forstå brukerens behov bedre, og for å kunne gi et godt og presist svar.
 

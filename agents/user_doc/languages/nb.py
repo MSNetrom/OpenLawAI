@@ -4,11 +4,11 @@ from __future__ import annotations
 from agents.models import UserDocQueryPayload, UserDocQuerySet
 
 # Status messages
-STATUS_READING_DOCS = "Leser dokumenter..."
-STATUS_EVALUATING_DOCS = "Vurderer dokumenter..."
-STATUS_EVALUATING_QUERY = "Vurderer dokumenter opp mot henvendelse..."
-STATUS_REVIEWING_DOCS = "Ser gjennom dokumenter..."
-ERROR_USER_DOC_FAILED = "Kunne ikke hente fra dokumentene nå. Fortsetter uten dokumentkontekst."
+STATUS_READING_DOCS = "Reading documents..."
+STATUS_EVALUATING_DOCS = "Evaluating documents..."
+STATUS_EVALUATING_QUERY = "Evaluating documents against request..."
+STATUS_REVIEWING_DOCS = "Reviewing documents..."
+ERROR_USER_DOC_FAILED = "Could not retrieve from documents now. Continuing without document context."
 
 # --- Query generation prompts ---
 
