@@ -5,4 +5,3 @@ dtype: auto
 max-model-len: 2048
 gpu-memory-utilization: 0.4
 chat-template: /config/qwen3_reranker.jinja
-

@@ -317,6 +317,13 @@ class ErrorEvent:
 
 
 @dataclass(frozen=True)
+class DoneEvent:
+    """Terminal event signalling the stream is complete."""
+    event: str = "done"
+    status: str = "completed"
+
+
+@dataclass(frozen=True)
 class HeartbeatEvent:
     """Keepalive event to prevent SSE timeout during long thinking phases."""
     event: str = "heartbeat"

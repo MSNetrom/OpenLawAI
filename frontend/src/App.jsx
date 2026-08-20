@@ -629,15 +629,17 @@ const App = () => {
     return () => document.removeEventListener("visibilitychange", handleVisibility);
   }, [activeLocalId, ensureConversationMessages]);
 
-  const handleAuthSuccess = (userData) => {
+  const handleAuthSuccess = (data) => {
     resetWorkspace();
-    setUser(userData);
+    if (data.csrf_token) window.CSRF_TOKEN = data.csrf_token;
+    setUser(data.user);
     setView("chat");
   };
 
   const handleLogout = async () => {
     try {
-      await fetchJSON("/api/auth/logout/", { method: "POST" });
+      const data = await fetchJSON("/api/auth/logout/", { method: "POST" });
+      if (data.csrf_token) window.CSRF_TOKEN = data.csrf_token;
       resetWorkspace();
       setUser(null);
       setView("login");
@@ -2221,7 +2223,7 @@ const LoginPanel = ({ onSuccess, onSwitch }) => {
         method: "POST",
         body: JSON.stringify({ username, password }),
       });
-      if (data.success && onSuccess) onSuccess(data.user);
+      if (data.success && onSuccess) onSuccess(data);
     } catch (err) {
       setError(err.message || "Invalid credentials.");
     } finally {
@@ -2289,7 +2291,7 @@ const RegisterPanel = ({ onSuccess, onSwitch }) => {
         method: "POST",
         body: JSON.stringify({ username, password, password_confirm: passwordConfirm }),
       });
-      if (data.success && onSuccess) onSuccess(data.user);
+      if (data.success && onSuccess) onSuccess(data);
     } catch (err) {
       setError(err.message || "Registration failed.");
     } finally {

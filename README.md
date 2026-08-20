@@ -1,6 +1,6 @@
 # OpenLawAI
 
-> **Work in progress.** This project is in the middle of a refactor from a private codebase to a public open-source project. It may not run cleanly out of the box yet. You're welcome to try it out and contribute — we're actively working on making the setup smoother. See [CONTRIBUTING.md](CONTRIBUTING.md).
+You're welcome to try it out and contribute. See [CONTRIBUTING.md](CONTRIBUTING.md).
 
 An open-source AI-powered legal assistant that helps users find relevant laws and regulations, analyze legal documents, and generate drafts of legal texts.
 
@@ -43,12 +43,14 @@ An open-source AI-powered legal assistant that helps users find relevant laws an
 
 ```bash
 cp .env.example .env
-# Edit .env — at minimum set OPENAI_API_KEY and POSTGRES_PASSWORD
+# Edit .env — at minimum set OPENAI_API_KEY
 
-docker compose up -d
+docker compose up
 ```
 
 This starts Weaviate, Redis, vLLM (embed + rerank), and Marker OCR.
+
+> **Note:** On the first run, vLLM downloads and loads the embedding/reranking models (~4B parameters each). This can take 10–20 minutes depending on your connection and GPU. The health check may time out before the models are ready — if you see `container openlawai-embed-1 is unhealthy`, run `docker compose down && docker compose up` again. Subsequent starts use cached weights and are much faster.
 
 ### 2. Install Python dependencies
 
@@ -58,24 +60,17 @@ Using [uv](https://docs.astral.sh/uv/) (recommended):
 uv sync
 ```
 
-Or with pip:
-
-```bash
-python -m venv .venv && source .venv/bin/activate
-pip install .
-```
-
 ### 3. Run migrations and ingest legal data
 
 ```bash
-uv run manage.py migrate
+uv run python manage.py migrate
 ```
 
 Then ingest legal data for your jurisdiction. For **Norwegian law** (the currently supported dataset):
 
 ```bash
 ./scripts/download_norwegian_law.sh
-uv run manage.py ingest_legal ./data/lovdata/
+uv run python manage.py ingest_legal ./data/norwegian-law/
 ```
 
 Other jurisdictions can be added by implementing a new extractor — see [Adding Support for New Jurisdictions](#adding-support-for-new-jurisdictions) below.
@@ -89,13 +84,7 @@ uv run manage.py collectstatic --noinput
 
 ### 5. Run the server
 
-Using Django's dev server (simplest):
-
-```bash
-uv run manage.py runserver
-```
-
-Or using uvicorn (recommended for production-like use):
+Using uvicorn:
 
 ```bash
 uv run uvicorn config.asgi:application --host 0.0.0.0 --port 8000
