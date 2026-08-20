@@ -20,10 +20,8 @@ __pycache__
 staticfiles/
 db.sqlite3
 
-# Frontend build artifacts
-chatdb/static/chat/index.js
-chatdb/static/chat/index.css
-chatdb/static
+# Frontend build artifacts (generated during build)
+chatdb/static/
 frontend/node_modules/
 frontend/dist/
 

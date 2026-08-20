@@ -78,6 +78,7 @@ Other jurisdictions can be added by implementing a new extractor — see [Adding
 ### 4. Build the frontend
 
 ```bash
+uv run python scripts/generate_logos.py
 cd frontend && npm install && npm run build && cd ..
 uv run manage.py collectstatic --noinput
 ```
