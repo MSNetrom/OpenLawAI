@@ -169,7 +169,7 @@ class ChatManager:
                     logger.error("Unknown mode dispatched mode=%s; falling back to answer", mode)
                     fallback_mode = "answer"
                     if fallback_mode not in self.modes:
-                        yield ErrorEvent(detail="Noe gikk galt. Prøv igjen senere.")
+                        yield ErrorEvent(detail="Something went wrong. Please try again later.")
                         return
                     mode = fallback_mode
                 mode_instance = self.modes[mode]
@@ -219,7 +219,7 @@ class ChatManager:
                     )
                     fallback_mode = "answer"
                     if fallback_mode not in self.modes:
-                        yield ErrorEvent(detail="Noe gikk galt. Prøv igjen senere.")
+                        yield ErrorEvent(detail="Something went wrong. Please try again later.")
                         return
                     mode = fallback_mode
                     continue
@@ -228,7 +228,7 @@ class ChatManager:
                 logger.info("handle_message_streaming transition mode=%s", mode)
         except Exception:
             logger.exception("handle_message_streaming crashed mode=%s", mode)
-            yield ErrorEvent(detail="Noe gikk galt. Prøv igjen senere.")
+            yield ErrorEvent(detail="Something went wrong. Please try again later.")
             return
 
     async def _context_for_mode(self, chat_history: ChatHistory) -> List[dict]:

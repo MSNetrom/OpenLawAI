@@ -16,6 +16,7 @@ from config.app_settings import upload_settings
 from legal_pipeline.document_extractor import get_extractor
 from legal_pipeline.ingestor import chunk_text, count_tokens
 
+from agents.locale import load_prompts
 from agents.mode_base import Mode
 from agents.models import (
     ChatHistory,
@@ -31,6 +32,8 @@ if TYPE_CHECKING:
     from chat_manager import ChatManager
 
 logger = logging.getLogger(__name__)
+
+_prompts = load_prompts("agents.shared.languages")
 
 
 def _is_systemic_extraction_error(exc: Exception) -> bool:
@@ -77,7 +80,7 @@ class ProcessDocumentsMode(Mode):
                 yield ModeResult(next_mode="decide")
                 return
 
-            yield StatusEvent(message="Behandler opplastede dokumenter...", mode=self.name)
+            yield StatusEvent(message=_prompts.STATUS_PROCESSING_DOCS, mode=self.name)
 
             extractor = get_extractor()
             docs_by_id = {doc.id: doc for doc in chat_history.metadata.user_docs.documents}
@@ -159,5 +162,5 @@ class ProcessDocumentsMode(Mode):
             raise
         except Exception:
             logger.exception("mode=process_documents failed, falling back to answer")
-            yield ErrorEvent(detail="Kunne ikke behandle dokumentene nå. Fortsetter uten dokumentkontekst.")
+            yield ErrorEvent(detail="Could not process documents now. Continuing without document context.")
             yield ModeResult(next_mode="answer")

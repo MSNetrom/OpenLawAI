@@ -1,19 +1,20 @@
 from __future__ import annotations
 
+import asyncio
 import io
 import logging
 import zipfile
 from pathlib import PurePosixPath
 from uuid import UUID
 
-from asgiref.sync import sync_to_async
-from django.http import Http404
+from django.http import Http404, StreamingHttpResponse
 from adrf.views import APIView
 from rest_framework import permissions, status
 from rest_framework.response import Response
 
 from chatdb.models import ChatConversation, GeneratedDocument, UserDocument
 from chatdb.serializers import UserDocumentSerializer
+from chatdb.views.helpers import DocumentUploadRejected, _store_uploaded_document
 from config.app_settings import upload_settings
 from legal_pipeline.document_extractor import count_pages
 import fitz as _fitz
@@ -23,6 +24,17 @@ logger = logging.getLogger(__name__)
 MAX_FILE_SIZE = 100 * 1024 * 1024  # 100MB
 MAX_IMAGE_FILE_SIZE = 50 * 1024 * 1024  # 50MB for images
 MAX_UPLOAD_FILENAME_LENGTH = 255
+
+ALLOWED_CONTENT_TYPES = {
+    "application/pdf",
+    "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+    "text/plain",
+    "text/markdown",
+    "image/png",
+    "image/jpeg",
+    "image/webp",
+    "image/tiff",
+}
 
 
 def _sanitize_uploaded_filename(filename: str) -> str:

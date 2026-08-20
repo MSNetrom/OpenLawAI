@@ -334,7 +334,7 @@ def _store_uploaded_document(
         effective_count = existing_count - (1 if existing_doc else 0)
         if effective_count >= upload_settings.max_docs_per_conversation:
             raise DocumentUploadRejected(
-                f"Maks {upload_settings.max_docs_per_conversation} dokumenter per samtale."
+                f"Maximum {upload_settings.max_docs_per_conversation} documents per conversation."
             )
 
         existing_pages = UserDocument.objects.filter(conversation=conversation).aggregate(total=Sum("page_count"))["total"] or 0

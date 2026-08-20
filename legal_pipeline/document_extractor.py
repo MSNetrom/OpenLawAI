@@ -51,7 +51,7 @@ def count_pages(file_bytes: bytes, content_type: str) -> int:
     return 1
 
 MARKER_API_URL = os.environ.get("MARKER_API_URL", "http://localhost:8003")
-MARKER_TIMEOUT = float(os.environ.get("MARKER_TIMEOUT_SECONDS", "300"))
+MARKER_TIMEOUT = float(os.environ.get("MARKER_TIMEOUT_SECONDS", "900"))
 
 
 class TextExtractor(Protocol):

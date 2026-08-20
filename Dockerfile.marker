@@ -32,10 +32,11 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 WORKDIR /app
 
-# Install PyTorch CPU-only first to avoid pulling CUDA dependencies
-RUN pip install --no-cache-dir torch --index-url https://download.pytorch.org/whl/cpu
+# Install PyTorch CPU-only (torch + torchvision) first to avoid pulling CUDA dependencies
+RUN pip install --no-cache-dir torch torchvision --index-url https://download.pytorch.org/whl/cpu
 
 # Install marker-pdf and server dependencies
+# The CPU torch/torchvision installed above will satisfy the requirements
 RUN pip install --no-cache-dir "marker-pdf[full]" uvicorn fastapi python-multipart
 
 COPY marker_proxy /app/marker_proxy

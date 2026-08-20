@@ -40,6 +40,7 @@ from chatdb.views.helpers import (
     _format_sse,
     _persist_messages_transaction,
     _persist_streamed_reply_fallback_transaction,
+    _sanitize_error,
     _select_llm_overlap,
     _store_uploaded_document,
     DocumentUploadRejected,

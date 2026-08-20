@@ -2,10 +2,23 @@
 
 from __future__ import annotations
 
+import os
+
+# Force CPU for torch and surya - MUST be set before any torch/surya imports
+os.environ.setdefault("CUDA_VISIBLE_DEVICES", "")
+os.environ.setdefault("TORCH_DEVICE", "cpu")
+os.environ.setdefault("SURYA_TORCH_DEVICE", "cpu")
+os.environ.setdefault("PYTORCH_ENABLE_MPS_FALLBACK", "1")
+
 import asyncio
 import io
 import logging
 from pathlib import Path
+
+import torch
+
+# Force CPU device for torch
+torch.set_default_device("cpu")
 
 from fastapi import FastAPI, File, HTTPException, UploadFile
 from marker.converters.pdf import PdfConverter
@@ -26,8 +39,12 @@ TEXT_EXTENSIONS = {".txt", ".md", ".html", ".htm", ".xml", ".json", ".csv"}
 def _load_marker_models() -> dict:
     global _MARKER_MODELS
     if _MARKER_MODELS is None:
-        logger.info("marker models loading")
-        _MARKER_MODELS = create_model_dict()
+        logger.info("marker models loading on CPU")
+        try:
+            _MARKER_MODELS = create_model_dict(device="cpu", dtype=torch.float32)
+        except TypeError:
+            # Fallback for older marker versions that don't accept device/dtype
+            _MARKER_MODELS = create_model_dict()
         logger.info("marker models loaded")
     return _MARKER_MODELS
 
